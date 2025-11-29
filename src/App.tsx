@@ -15,8 +15,10 @@ import Profile from "./pages/Profile";
 import RequestRide from "./pages/RequestRide";
 import Trips from "./pages/Trips";
 import Payments from "./pages/Payments";
-import SelectRide from "./pages/SelectRide"; // Nova rota
-import Tracking from "./pages/Tracking";     // Nova rota
+import SelectRide from "./pages/SelectRide";
+import Tracking from "./pages/Tracking";
+import Settings from "./pages/Settings"; // Nova rota
+import SavedAddresses from "./pages/SavedAddresses"; // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -60,8 +62,10 @@ const App = () => (
             <Route path="/request-ride" element={<ProtectedRoute><RequestRide /></ProtectedRoute>} />
             <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
             <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
-            <Route path="/select-ride" element={<ProtectedRoute><SelectRide /></ProtectedRoute>} /> {/* Nova rota */}
-            <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />       {/* Nova rota */}
+            <Route path="/select-ride" element={<ProtectedRoute><SelectRide /></ProtectedRoute>} />
+            <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/saved-addresses" element={<ProtectedRoute><SavedAddresses /></ProtectedRoute>} /> {/* Nova rota */}
             <Route
               path="/"
               element={
