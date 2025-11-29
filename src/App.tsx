@@ -11,10 +11,12 @@ import Register from "./pages/Register";
 import VerifyPhone from "./pages/VerifyPhone";
 import AddPayment from "./pages/AddPayment";
 import RegistrationSuccess from "./pages/RegistrationSuccess";
-import Profile from "./pages/Profile"; // Renomeado de PassengerProfile
+import Profile from "./pages/Profile";
 import RequestRide from "./pages/RequestRide";
-import Trips from "./pages/Trips"; // Nova rota
-import Payments from "./pages/Payments"; // Nova rota
+import Trips from "./pages/Trips";
+import Payments from "./pages/Payments";
+import SelectRide from "./pages/SelectRide"; // Nova rota
+import Tracking from "./pages/Tracking";     // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -54,10 +56,12 @@ const App = () => (
             <Route path="/verify-phone" element={<ProtectedRoute><VerifyPhone /></ProtectedRoute>} />
             <Route path="/add-payment" element={<ProtectedRoute><AddPayment /></ProtectedRoute>} />
             <Route path="/registration-success" element={<ProtectedRoute><RegistrationSuccess /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> {/* Rota de perfil atualizada */}
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/request-ride" element={<ProtectedRoute><RequestRide /></ProtectedRoute>} />
-            <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} /> {/* Nova rota */}
-            <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
+            <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
+            <Route path="/select-ride" element={<ProtectedRoute><SelectRide /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />       {/* Nova rota */}
             <Route
               path="/"
               element={

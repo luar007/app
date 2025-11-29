@@ -4,26 +4,26 @@ import { Button } from '@/components/ui/button';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { showSuccess, showError } from '@/utils/toast';
 import BottomNavBar from '@/components/BottomNavBar';
+import { useNavigate } from 'react-router-dom';
 
 const RequestRide = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRequestRide = (e: React.FormEvent) => {
+  const handleConfirmDestination = (e: React.FormEvent) => {
     e.preventDefault();
     if (!origin.trim() || !destination.trim()) {
       showError('Por favor, preencha a origem e o destino.');
       return;
     }
     setLoading(true);
-    // Simular a solicitação de corrida
+    // Simular o tempo de confirmação e redirecionar para a tela de seleção de viagem
     setTimeout(() => {
-      showSuccess(`Corrida solicitada de ${origin} para ${destination}!`);
       setLoading(false);
-      setOrigin('');
-      setDestination('');
-    }, 2000);
+      navigate('/select-ride');
+    }, 1000);
   };
 
   // URL do Google Maps Embed API. Você pode personalizar o centro e o zoom.
@@ -51,7 +51,7 @@ const RequestRide = () => {
         <h1 className="text-4xl font-bold mb-8 text-center text-white">Solicitar Corrida</h1>
 
         <div className="w-full bg-gray-800 p-6 rounded-lg shadow-lg mb-4">
-          <form onSubmit={handleRequestRide} className="space-y-4">
+          <form onSubmit={handleConfirmDestination} className="space-y-4">
             <Input
               type="text"
               placeholder="Ponto de partida"
