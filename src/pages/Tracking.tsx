@@ -14,7 +14,7 @@ const Tracking = () => {
   };
 
   // URL do Google Maps Embed API para simular o acompanhamento
-  const mapEmbedUrl = `https://www.google.com/maps/embed/v1/directions?key=YOUR_GOOGLE_MAPS_API_KEY&origin=Sua+Localização&destination=Destino+da+Viagem&mode=driving`;
+  const mapEmbedUrl = `https://www.google.com/maps/embed/v1/directions?key=AIzaSyDsO2bQrWULscRlDL10Op6Jkm3SMfvgVCk&origin=Sua+Localização&destination=Destino+da+Viagem&mode=driving`;
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20">

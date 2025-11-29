@@ -28,7 +28,7 @@ const RequestRide = () => {
 
   // URL do Google Maps Embed API. Você pode personalizar o centro e o zoom.
   // Para um mapa mais dinâmico, seria necessário o Google Maps JavaScript API com uma chave.
-  const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=Brazil`;
+  const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyDsO2bQrWULscRlDL10Op6Jkm3SMfvgVCk&q=Brazil`;
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20"> {/* Adicionado padding-bottom para a nav bar */}
