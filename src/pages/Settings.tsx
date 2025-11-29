@@ -27,7 +27,7 @@ const Settings = () => {
 
       <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
         <div className="space-y-3">
-          <Button variant="ghost" onClick={() => navigate('/edit-profile')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
+          <Button variant="ghost" onClick={() => navigate('/personal-info')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
             <User className="h-5 w-5 mr-3" /> Informações Pessoais
           </Button>
           <Button variant="ghost" onClick={() => navigate('/payments')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">

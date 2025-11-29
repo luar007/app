@@ -17,8 +17,9 @@ import Trips from "./pages/Trips";
 import Payments from "./pages/Payments";
 import SelectRide from "./pages/SelectRide";
 import Tracking from "./pages/Tracking";
-import Settings from "./pages/Settings"; // Nova rota
-import SavedAddresses from "./pages/SavedAddresses"; // Nova rota
+import Settings from "./pages/Settings";
+import SavedAddresses from "./pages/SavedAddresses";
+import PersonalInfo from "./pages/PersonalInfo"; // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -39,7 +40,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!session) {
-    return null; // Ou um spinner de carregamento, ou redirecionando
+    return null;
   }
 
   return <>{children}</>;
@@ -64,8 +65,9 @@ const App = () => (
             <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
             <Route path="/select-ride" element={<ProtectedRoute><SelectRide /></ProtectedRoute>} />
             <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
-            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} /> {/* Nova rota */}
-            <Route path="/saved-addresses" element={<ProtectedRoute><SavedAddresses /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/saved-addresses" element={<ProtectedRoute><SavedAddresses /></ProtectedRoute>} />
+            <Route path="/personal-info" element={<ProtectedRoute><PersonalInfo /></ProtectedRoute>} /> {/* Nova rota */}
             <Route
               path="/"
               element={
