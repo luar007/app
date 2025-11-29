@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import BottomNavBar from '@/components/BottomNavBar';
-import { User, CreditCard, MapPin, Bell, Lock, HelpCircle, LogOut } from 'lucide-react';
+import { User, CreditCard, MapPin, Bell, Lock, HelpCircle, LogOut, FileText } from 'lucide-react'; // Importar FileText
 import { showSuccess, showError } from '@/utils/toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -29,6 +29,9 @@ const Settings = () => {
         <div className="space-y-3">
           <Button variant="ghost" onClick={() => navigate('/personal-info')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
             <User className="h-5 w-5 mr-3" /> Informações Pessoais
+          </Button>
+          <Button variant="ghost" onClick={() => navigate('/document-verification')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
+            <FileText className="h-5 w-5 mr-3" /> Verificação de Documentos
           </Button>
           <Button variant="ghost" onClick={() => navigate('/payments')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
             <CreditCard className="h-5 w-5 mr-3" /> Pagamento

@@ -19,7 +19,8 @@ import SelectRide from "./pages/SelectRide";
 import Tracking from "./pages/Tracking";
 import Settings from "./pages/Settings";
 import SavedAddresses from "./pages/SavedAddresses";
-import PersonalInfo from "./pages/PersonalInfo"; // Nova rota
+import PersonalInfo from "./pages/PersonalInfo";
+import DocumentVerification from "./pages/DocumentVerification"; // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -67,7 +68,8 @@ const App = () => (
             <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/saved-addresses" element={<ProtectedRoute><SavedAddresses /></ProtectedRoute>} />
-            <Route path="/personal-info" element={<ProtectedRoute><PersonalInfo /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/personal-info" element={<ProtectedRoute><PersonalInfo /></ProtectedRoute>} />
+            <Route path="/document-verification" element={<ProtectedRoute><DocumentVerification /></ProtectedRoute>} /> {/* Nova rota */}
             <Route
               path="/"
               element={
