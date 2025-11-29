@@ -7,11 +7,12 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Tasks from "./pages/Tasks";
-import Register from "./pages/Register"; // Nova rota
-import VerifyPhone from "./pages/VerifyPhone"; // Nova rota
-import AddPayment from "./pages/AddPayment"; // Nova rota
-import RegistrationSuccess from "./pages/RegistrationSuccess"; // Nova rota
-import PassengerProfile from "./pages/PassengerProfile"; // Nova rota
+import Register from "./pages/Register";
+import VerifyPhone from "./pages/VerifyPhone";
+import AddPayment from "./pages/AddPayment";
+import RegistrationSuccess from "./pages/RegistrationSuccess";
+import PassengerProfile from "./pages/PassengerProfile";
+import RequestRide from "./pages/RequestRide"; // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/add-payment" element={<ProtectedRoute><AddPayment /></ProtectedRoute>} />
             <Route path="/registration-success" element={<ProtectedRoute><RegistrationSuccess /></ProtectedRoute>} />
             <Route path="/passenger-profile" element={<ProtectedRoute><PassengerProfile /></ProtectedRoute>} />
+            <Route path="/request-ride" element={<ProtectedRoute><RequestRide /></ProtectedRoute>} /> {/* Nova rota */}
             <Route
               path="/"
               element={

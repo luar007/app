@@ -26,7 +26,7 @@ const Register = () => {
       password,
       options: {
         data: {
-          registration_step: 'email_confirmed', // Próximo passo após confirmar e-mail
+          registration_step: 'phone_verified', // Pula a confirmação de e-mail e vai direto para 'phone_verified'
         },
       },
     });
@@ -36,7 +36,7 @@ const Register = () => {
       showError(`Erro ao registrar: ${error.message}`);
     } else {
       showSuccess('Registro bem-sucedido! Verifique seu e-mail para confirmar.');
-      navigate('/verify-phone'); // Redirecionar para a próxima etapa
+      navigate('/add-payment'); // Redirecionar para a próxima etapa (Adicionar Pagamento)
     }
     setLoading(false);
   };

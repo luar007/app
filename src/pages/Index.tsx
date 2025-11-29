@@ -59,17 +59,15 @@ const Index = () => {
       case 'initial':
         navigate('/register');
         break;
-      case 'email_confirmed':
-        navigate('/verify-phone');
-        break;
-      case 'phone_verified':
+      case 'email_confirmed': // Esta etapa será pulada, mas mantida para consistência
+      case 'phone_verified': // Agora, após a verificação de e-mail, vai para adicionar pagamento
         navigate('/add-payment');
         break;
       case 'payment_added':
         navigate('/registration-success');
         break;
       case 'completed':
-        navigate('/passenger-profile');
+        navigate('/request-ride'); // Redirecionar para a tela de solicitar corrida
         break;
       default:
         navigate('/register'); // Fallback

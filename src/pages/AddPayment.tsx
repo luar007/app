@@ -31,7 +31,7 @@ const AddPayment = () => {
       if (user) {
         const { error: updateError } = await supabase
           .from('profiles')
-          .update({ registration_step: 'payment_added' })
+          .update({ registration_step: 'completed' }) // Marca como completo após o pagamento
           .eq('id', user.id);
 
         if (updateError) {
@@ -39,7 +39,7 @@ const AddPayment = () => {
           showError('Erro ao atualizar passo de registro.');
         }
       }
-      navigate('/registration-success'); // Redirecionar para a próxima etapa
+      navigate('/request-ride'); // Redirecionar para a tela de solicitar corrida
     } catch (error: any) {
       console.error('Erro ao adicionar pagamento:', error.message);
       showError(`Erro ao adicionar pagamento: ${error.message}`);
