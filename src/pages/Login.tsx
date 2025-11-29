@@ -11,7 +11,7 @@ const Login = () => {
 
   useEffect(() => {
     if (session && !loading) {
-      navigate('/'); // Redirecionar para a rota '/' (tela de seleção) após o login
+      navigate('/request-ride'); // Redirecionar para a tela de solicitar corrida após o login
     }
   }, [session, loading, navigate]);
 

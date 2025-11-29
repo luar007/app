@@ -30,46 +30,52 @@ const RequestRide = () => {
   const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=Brazil`;
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-veloxGreen-background p-4 text-veloxGreen-text">
-      <h1 className="text-4xl font-bold mb-8 text-center">Solicitar Corrida</h1>
-
-      <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <div className="relative h-64 w-full mb-4 rounded-md overflow-hidden">
-          <iframe
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
-            src={mapEmbedUrl}
-            title="Mapa Interativo"
-          ></iframe>
-        </div>
-
-        <form onSubmit={handleRequestRide} className="space-y-4">
-          <Input
-            type="text"
-            placeholder="Origem"
-            value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
-            required
-            className="bg-gray-700 border-gray-600 text-veloxGreen-text placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
-          />
-          <Input
-            type="text"
-            placeholder="Destino"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            required
-            className="bg-gray-700 border-gray-600 text-veloxGreen-text placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
-          />
-          <Button type="submit" className="btn-velox w-full" disabled={loading}>
-            {loading ? 'Solicitando...' : 'Solicitar VeloX'}
-          </Button>
-        </form>
+    <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text">
+      {/* Mapa de fundo */}
+      <div className="absolute inset-0 z-0">
+        <iframe
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          loading="lazy"
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+          src={mapEmbedUrl}
+          title="Mapa Interativo"
+        ></iframe>
       </div>
-      <MadeWithDyad />
+
+      {/* Conteúdo da página sobreposto ao mapa */}
+      <div className="relative z-10 flex flex-col items-center w-full max-w-md p-4">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white">Solicitar Corrida</h1>
+
+        <div className="w-full bg-gray-800 p-6 rounded-lg shadow-lg mb-4">
+          <form onSubmit={handleRequestRide} className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Ponto de partida"
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value)}
+              required
+              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
+            />
+            <Input
+              type="text"
+              placeholder="Para onde vamos?"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              required
+              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
+            />
+            <Button type="submit" className="btn-velox w-full" disabled={loading}>
+              {loading ? 'Confirmando...' : 'Confirmar Destino'}
+            </Button>
+          </form>
+        </div>
+      </div>
+      <div className="relative z-10 w-full">
+        <MadeWithDyad />
+      </div>
     </div>
   );
 };

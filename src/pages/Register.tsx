@@ -26,7 +26,7 @@ const Register = () => {
       password,
       options: {
         data: {
-          registration_step: 'phone_verified', // Pula a confirmação de e-mail e vai direto para 'phone_verified'
+          registration_step: 'completed', // Marca como completo para ir direto para a tela de corrida
         },
       },
     });
@@ -36,7 +36,7 @@ const Register = () => {
       showError(`Erro ao registrar: ${error.message}`);
     } else {
       showSuccess('Registro bem-sucedido! Verifique seu e-mail para confirmar.');
-      navigate('/add-payment'); // Redirecionar para a próxima etapa (Adicionar Pagamento)
+      navigate('/request-ride'); // Redirecionar para a tela de solicitar corrida
     }
     setLoading(false);
   };
