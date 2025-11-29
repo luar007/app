@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { showSuccess, showError } from '@/utils/toast';
+import BottomNavBar from '@/components/BottomNavBar';
 
 const RequestRide = () => {
   const [origin, setOrigin] = useState('');
@@ -30,7 +31,7 @@ const RequestRide = () => {
   const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=Brazil`;
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text">
+    <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20"> {/* Adicionado padding-bottom para a nav bar */}
       {/* Mapa de fundo */}
       <div className="absolute inset-0 z-0">
         <iframe
@@ -76,6 +77,7 @@ const RequestRide = () => {
       <div className="relative z-10 w-full">
         <MadeWithDyad />
       </div>
+      <BottomNavBar />
     </div>
   );
 };

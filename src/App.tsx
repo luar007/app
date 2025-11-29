@@ -11,8 +11,10 @@ import Register from "./pages/Register";
 import VerifyPhone from "./pages/VerifyPhone";
 import AddPayment from "./pages/AddPayment";
 import RegistrationSuccess from "./pages/RegistrationSuccess";
-import PassengerProfile from "./pages/PassengerProfile";
-import RequestRide from "./pages/RequestRide"; // Nova rota
+import Profile from "./pages/Profile"; // Renomeado de PassengerProfile
+import RequestRide from "./pages/RequestRide";
+import Trips from "./pages/Trips"; // Nova rota
+import Payments from "./pages/Payments"; // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -52,8 +54,10 @@ const App = () => (
             <Route path="/verify-phone" element={<ProtectedRoute><VerifyPhone /></ProtectedRoute>} />
             <Route path="/add-payment" element={<ProtectedRoute><AddPayment /></ProtectedRoute>} />
             <Route path="/registration-success" element={<ProtectedRoute><RegistrationSuccess /></ProtectedRoute>} />
-            <Route path="/passenger-profile" element={<ProtectedRoute><PassengerProfile /></ProtectedRoute>} />
-            <Route path="/request-ride" element={<ProtectedRoute><RequestRide /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> {/* Rota de perfil atualizada */}
+            <Route path="/request-ride" element={<ProtectedRoute><RequestRide /></ProtectedRoute>} />
+            <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} /> {/* Nova rota */}
+            <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} /> {/* Nova rota */}
             <Route
               path="/"
               element={

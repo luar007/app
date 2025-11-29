@@ -7,16 +7,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Mail, History, CreditCard, Bell, Lock } from 'lucide-react';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { showError } from '@/utils/toast';
+import BottomNavBar from '@/components/BottomNavBar';
 
-interface Profile {
+interface ProfileData {
   first_name: string;
   last_name: string;
   avatar_url: string;
 }
 
-const PassengerProfile = () => {
+const Profile = () => {
   const { user, loading: sessionLoading } = useSession();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ const PassengerProfile = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-veloxGreen-background p-4 text-veloxGreen-text">
+    <div className="min-h-screen flex flex-col items-center bg-veloxGreen-background p-4 text-veloxGreen-text pb-20"> {/* Adicionado padding-bottom para a nav bar */}
       <h1 className="text-4xl font-bold mb-8">Meu Perfil</h1>
 
       <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg mb-8 flex flex-col items-center">
@@ -74,10 +75,10 @@ const PassengerProfile = () => {
         </Button>
 
         <div className="w-full space-y-3">
-          <Button variant="ghost" className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
+          <Button variant="ghost" onClick={() => navigate('/trips')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
             <History className="h-5 w-5 mr-3" /> Histórico de Viagens
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
+          <Button variant="ghost" onClick={() => navigate('/payments')} className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
             <CreditCard className="h-5 w-5 mr-3" /> Meus Pagamentos
           </Button>
           <Button variant="ghost" className="w-full justify-start text-veloxGreen-text hover:bg-gray-700">
@@ -89,8 +90,9 @@ const PassengerProfile = () => {
         </div>
       </div>
       <MadeWithDyad />
+      <BottomNavBar />
     </div>
   );
 };
 
-export default PassengerProfile;
+export default Profile;
