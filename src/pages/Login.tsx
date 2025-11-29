@@ -11,7 +11,7 @@ const Login = () => {
 
   useEffect(() => {
     if (session && !loading) {
-      navigate('/tasks'); // Redirecionar para /tasks após o login
+      navigate('/'); // Redirecionar para a rota '/' (tela de seleção) após o login
     }
   }, [session, loading, navigate]);
 

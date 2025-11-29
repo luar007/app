@@ -15,15 +15,13 @@ const Index = () => {
   };
 
   const handlePassengerClick = () => {
-    // Lógica para quando o botão "Sou Passageiro" for clicado
     console.log("Passageiro clicado!");
-    // navigate('/passenger-dashboard'); // Exemplo de navegação
+    navigate('/tasks'); // Redirecionar para /tasks
   };
 
   const handleDriverClick = () => {
-    // Lógica para quando o botão "Sou Motorista" for clicado
     console.log("Motorista clicado!");
-    // navigate('/driver-dashboard'); // Exemplo de navegação
+    navigate('/tasks'); // Redirecionar para /tasks
   };
 
   return (
