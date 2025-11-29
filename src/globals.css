@@ -103,9 +103,9 @@
 
   body {
     @apply bg-[hsl(var(--velox-background))] text-[hsl(var(--velox-text))];
-    /* Adicionar um fundo texturizado ou de mapa sutil, se possível */
-    /* Exemplo: background-image: url('/path/to/your/subtle-texture.png'); */
-    /* background-size: cover; */
+    /* Simulação de textura de mapa sutil */
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+    background-size: 10px 10px;
   }
 }
 

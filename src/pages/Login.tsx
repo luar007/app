@@ -11,7 +11,7 @@ const Login = () => {
 
   useEffect(() => {
     if (session && !loading) {
-      navigate('/');
+      navigate('/tasks'); // Redirecionar para /tasks após o login
     }
   }, [session, loading, navigate]);
 
@@ -20,9 +20,9 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-veloxGreen-background">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-veloxGreen-text">Login VeloX</h2>
         <Auth
           supabaseClient={supabase}
           providers={[]}
@@ -31,13 +31,18 @@ const Login = () => {
             variables: {
               default: {
                 colors: {
-                  brand: 'hsl(var(--primary))',
-                  brandAccent: 'hsl(var(--primary-foreground))',
+                  brand: 'hsl(var(--velox-green))',
+                  brandAccent: 'hsl(var(--velox-green-dark))',
+                  inputBackground: 'hsl(var(--velox-background))',
+                  inputBorder: 'hsl(var(--velox-green-dark))',
+                  inputBorderHover: 'hsl(var(--velox-green))',
+                  inputBorderFocus: 'hsl(var(--velox-green))',
+                  inputText: 'hsl(var(--velox-text))',
                 },
               },
             },
           }}
-          theme="light"
+          theme="dark" // Usar tema escuro para combinar com o fundo
         />
       </div>
     </div>
