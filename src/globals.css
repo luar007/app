@@ -49,6 +49,12 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* VeloX Custom Colors */
+    --velox-green: 145 63% 42%;
+    --velox-green-dark: 145 63% 22%;
+    --velox-background: 160 20% 15%;
+    --velox-text: 0 0% 95%;
   }
 
   .dark {
@@ -96,6 +102,14 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[hsl(var(--velox-background))] text-[hsl(var(--velox-text))];
+    /* Adicionar um fundo texturizado ou de mapa sutil, se possível */
+    /* Exemplo: background-image: url('/path/to/your/subtle-texture.png'); */
+    /* background-size: cover; */
   }
+}
+
+/* Estilo para botões arredondados e preenchidos */
+.btn-velox {
+  @apply bg-veloxGreen text-veloxGreen-text rounded-full px-6 py-3 font-bold hover:bg-veloxGreen-dark transition-colors;
 }

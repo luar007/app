@@ -62,11 +62,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // VeloX Custom Colors
+        veloxGreen: {
+          DEFAULT: "hsl(145, 63%, 42%)", // Um verde vibrante para botões
+          dark: "hsl(145, 63%, 22%)", // Um verde mais escuro para hover
+          background: "hsl(160, 20%, 15%)", // Verde escuro para o fundo
+          text: "hsl(0, 0%, 95%)", // Texto claro
+        },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0.75rem", // Mais arredondado
+        md: "0.5rem",
+        sm: "0.375rem",
       },
       keyframes: {
         "accordion-down": {

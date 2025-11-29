@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/contexts/SessionContext";
 import { useNavigate } from "react-router-dom";
+import VeloXHero from "@/components/VeloXHero"; // Importar o novo componente
 
 const Index = () => {
   const { user } = useSession();
@@ -13,20 +14,36 @@ const Index = () => {
     navigate('/login');
   };
 
+  const handlePassengerClick = () => {
+    // Lógica para quando o botão "Sou Passageiro" for clicado
+    console.log("Passageiro clicado!");
+    // navigate('/passenger-dashboard'); // Exemplo de navegação
+  };
+
+  const handleDriverClick = () => {
+    // Lógica para quando o botão "Sou Motorista" for clicado
+    console.log("Motorista clicado!");
+    // navigate('/driver-dashboard'); // Exemplo de navegação
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your App!</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-veloxGreen-background p-4">
+      <VeloXHero
+        onPassengerClick={handlePassengerClick}
+        onDriverClick={handleDriverClick}
+      />
+
+      <div className="text-center mt-8">
         {user ? (
           <>
-            <p className="text-xl text-gray-600 mb-2">Hello, {user.email}</p>
-            <Button onClick={handleLogout} className="mt-4">
-              Logout
+            <p className="text-xl text-veloxGreen-text mb-2">Olá, {user.email}</p>
+            <Button onClick={handleLogout} className="btn-velox">
+              Sair
             </Button>
           </>
         ) : (
-          <p className="text-xl text-gray-600">
-            You are not logged in. Please log in to continue.
+          <p className="text-xl text-veloxGreen-text">
+            Você não está logado. Por favor, faça login para continuar.
           </p>
         )}
       </div>

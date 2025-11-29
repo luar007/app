@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Tasks from "./pages/Tasks"; // Importar a nova página Tasks
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -22,11 +23,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }, [session, loading, navigate]);
 
   if (loading) {
-    return <div>Loading authentication...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-veloxGreen-background text-veloxGreen-text">Carregando autenticação...</div>;
   }
 
   if (!session) {
-    return null; // Or a loading spinner, or redirecting
+    return null; // Ou um spinner de carregamento, ou redirecionando
   }
 
   return <>{children}</>;
@@ -46,6 +47,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Index />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tasks" // Nova rota para as tarefas
+              element={
+                <ProtectedRoute>
+                  <Tasks />
                 </ProtectedRoute>
               }
             />
