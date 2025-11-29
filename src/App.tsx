@@ -6,7 +6,12 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import Tasks from "./pages/Tasks"; // Importar a nova página Tasks
+import Tasks from "./pages/Tasks";
+import Register from "./pages/Register"; // Nova rota
+import VerifyPhone from "./pages/VerifyPhone"; // Nova rota
+import AddPayment from "./pages/AddPayment"; // Nova rota
+import RegistrationSuccess from "./pages/RegistrationSuccess"; // Nova rota
+import PassengerProfile from "./pages/PassengerProfile"; // Nova rota
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import { useEffect } from "react";
 
@@ -42,6 +47,11 @@ const App = () => (
         <SessionContextProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify-phone" element={<ProtectedRoute><VerifyPhone /></ProtectedRoute>} />
+            <Route path="/add-payment" element={<ProtectedRoute><AddPayment /></ProtectedRoute>} />
+            <Route path="/registration-success" element={<ProtectedRoute><RegistrationSuccess /></ProtectedRoute>} />
+            <Route path="/passenger-profile" element={<ProtectedRoute><PassengerProfile /></ProtectedRoute>} />
             <Route
               path="/"
               element={
@@ -51,7 +61,7 @@ const App = () => (
               }
             />
             <Route
-              path="/tasks" // Nova rota para as tarefas
+              path="/tasks"
               element={
                 <ProtectedRoute>
                   <Tasks />
