@@ -21,6 +21,8 @@ const RequestRide = () => {
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const geocoderService = useRef<google.maps.Geocoder | null>(null);
   const placesService = useRef<google.maps.places.PlacesService | null>(null);
+  const directionsService = useRef<google.maps.DirectionsService | null>(null);
+  const directionsRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
 
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
@@ -47,6 +49,8 @@ const RequestRide = () => {
     autocompleteService.current = new window.google.maps.places.AutocompleteService();
     geocoderService.current = new window.google.maps.Geocoder();
     placesService.current = new window.google.maps.places.PlacesService(googleMap.current);
+    directionsService.current = new window.google.maps.DirectionsService();
+    directionsRenderer.current = new window.google.maps.DirectionsRenderer({ map: googleMap.current });
 
     getCurrentLocation();
   };
@@ -144,11 +148,35 @@ const RequestRide = () => {
       return;
     }
     setLoading(true);
-    // Simular o tempo de confirmação e redirecionar para a tela de seleção de viagem
-    setTimeout(() => {
+
+    const request: google.maps.DirectionsRequest = {
+      origin: origin,
+      destination: destination,
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+
+    directionsService.current?.route(request, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK && result) {
+        directionsRenderer.current?.setDirections(result);
+        const route = result.routes[0].legs[0];
+        if (route.distance && route.duration) {
+          navigate('/select-ride', {
+            state: {
+              origin,
+              destination,
+              distance: route.distance.value, // in meters
+              duration: route.duration.value, // in seconds
+            },
+          });
+        } else {
+          showError('Não foi possível calcular a distância e duração da rota.');
+        }
+      } else {
+        console.error('Directions request failed due to ' + status);
+        showError('Não foi possível encontrar uma rota para o destino selecionado.');
+      }
       setLoading(false);
-      navigate('/select-ride');
-    }, 1000);
+    });
   };
 
   if (loadError) {
