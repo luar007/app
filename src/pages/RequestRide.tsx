@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useGoogleMaps } from '@/hooks/useGoogleMaps';
 import { MapPin } from 'lucide-react';
 
+declare var google: any; // Declaração global para resolver erros de tipo
+
 const RequestRide = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
@@ -16,13 +18,13 @@ const RequestRide = () => {
   const navigate = useNavigate();
   const { isLoaded, loadError } = useGoogleMaps();
   const mapRef = useRef<HTMLDivElement>(null);
-  const googleMap = useRef<google.maps.Map | null>(null);
-  const currentMarker = useRef<google.maps.Marker | null>(null);
-  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
-  const geocoderService = useRef<typeof google.maps.Geocoder | null>(null);
-  const placesService = useRef<google.maps.places.PlacesService | null>(null);
-  const directionsService = useRef<typeof google.maps.DirectionsService | null>(null);
-  const directionsRenderer = useRef<typeof google.maps.DirectionsRenderer | null>(null);
+  const googleMap = useRef<any | null>(null); // Usando 'any' para simplificar
+  const currentMarker = useRef<any | null>(null); // Usando 'any' para simplificar
+  const autocompleteService = useRef<any | null>(null); // Usando 'any' para simplificar
+  const geocoderService = useRef<any | null>(null); // Usando 'any' para simplificar
+  const placesService = useRef<any | null>(null); // Usando 'any' para simplificar
+  const directionsService = useRef<any | null>(null); // Usando 'any' para simplificar
+  const directionsRenderer = useRef<any | null>(null); // Usando 'any' para simplificar
 
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
@@ -42,17 +44,17 @@ const RequestRide = () => {
       return;
     }
 
-    googleMap.current = new window.google.maps.Map(mapRef.current as HTMLElement, {
+    googleMap.current = new google.maps.Map(mapRef.current as HTMLElement, {
       center: defaultCenter,
       zoom: 12,
       disableDefaultUI: true,
     });
 
-    autocompleteService.current = new window.google.maps.places.AutocompleteService();
-    geocoderService.current = new window.google.maps.Geocoder.Geocoder();
-    placesService.current = new window.google.maps.places.PlacesService(googleMap.current);
-    directionsService.current = new window.google.maps.DirectionsService.DirectionsService();
-    directionsRenderer.current = new window.google.maps.DirectionsRenderer.DirectionsRenderer({ map: googleMap.current });
+    autocompleteService.current = new google.maps.places.AutocompleteService();
+    geocoderService.current = new google.maps.Geocoder();
+    placesService.current = new google.maps.places.PlacesService(googleMap.current);
+    directionsService.current = new google.maps.DirectionsService();
+    directionsRenderer.current = new google.maps.DirectionsRenderer({ map: googleMap.current });
 
     getCurrentLocation();
   };
@@ -64,7 +66,7 @@ const RequestRide = () => {
     }
 
     if (originInputRef.current) {
-      const originAutocomplete = new window.google.maps.places.Autocomplete(originInputRef.current, {
+      const originAutocomplete = new google.maps.places.Autocomplete(originInputRef.current, {
         types: ['address'],
         componentRestrictions: { country: 'br' }, // Restrict to Brazil
       });
@@ -77,7 +79,7 @@ const RequestRide = () => {
     }
 
     if (destinationInputRef.current) {
-      const destinationAutocomplete = new window.google.maps.places.Autocomplete(destinationInputRef.current, {
+      const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputRef.current, {
         types: ['address'],
         componentRestrictions: { country: 'br' }, // Restrict to Brazil
       });
@@ -117,16 +119,16 @@ const RequestRide = () => {
     }
   };
 
-  const addCurrentLocationMarker = (position: google.maps.LatLngLiteral) => {
+  const addCurrentLocationMarker = (position: any) => { // Usando 'any' para simplificar
     if (currentMarker.current) {
       currentMarker.current.setMap(null);
     }
-    currentMarker.current = new window.google.maps.Marker({
+    currentMarker.current = new google.maps.Marker({
       position: position,
       map: googleMap.current,
       title: 'Sua Localização Atual',
       icon: {
-        path: window.google.maps.SymbolPath.CIRCLE,
+        path: google.maps.SymbolPath.CIRCLE,
         scale: 7,
         fillColor: '#4CAF50', // Velox Green
         fillOpacity: 1,
@@ -136,8 +138,8 @@ const RequestRide = () => {
     });
   };
 
-  const reverseGeocode = (position: google.maps.LatLngLiteral) => {
-    geocoderService.current?.geocode({ location: position }, (results, status) => {
+  const reverseGeocode = (position: any) => { // Usando 'any' para simplificar
+    geocoderService.current?.geocode({ location: position }, (results: any, status: any) => {
       if (status === 'OK' && results && results[0]) {
         setCurrentLocation(results[0].formatted_address);
         setOrigin(results[0].formatted_address);
@@ -156,14 +158,14 @@ const RequestRide = () => {
     }
     setLoading(true);
 
-    const request: google.maps.DirectionsService.DirectionsRequest = {
+    const request: any = { // Usando 'any' para simplificar
       origin: origin,
       destination: destination,
-      travelMode: google.maps.DirectionsService.TravelMode.DRIVING,
+      travelMode: google.maps.TravelMode.DRIVING,
     };
 
-    directionsService.current?.route(request, (result, status) => {
-      if (status === google.maps.DirectionsService.DirectionsStatus.OK && result) {
+    directionsService.current?.route(request, (result: any, status: any) => {
+      if (status === google.maps.DirectionsStatus.OK && result) {
         directionsRenderer.current?.setDirections(result);
         const route = result.routes[0].legs[0];
         if (route.distance && route.duration) {
