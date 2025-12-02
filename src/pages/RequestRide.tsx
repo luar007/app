@@ -19,10 +19,10 @@ const RequestRide = () => {
   const googleMap = useRef<google.maps.Map | null>(null);
   const currentMarker = useRef<google.maps.Marker | null>(null);
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
-  const geocoderService = useRef<google.maps.Geocoder | null>(null);
+  const geocoderService = useRef<typeof google.maps.Geocoder | null>(null);
   const placesService = useRef<google.maps.places.PlacesService | null>(null);
-  const directionsService = useRef<google.maps.DirectionsService | null>(null);
-  const directionsRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
+  const directionsService = useRef<typeof google.maps.DirectionsService | null>(null);
+  const directionsRenderer = useRef<typeof google.maps.DirectionsRenderer | null>(null);
 
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
@@ -49,10 +49,10 @@ const RequestRide = () => {
     });
 
     autocompleteService.current = new window.google.maps.places.AutocompleteService();
-    geocoderService.current = new window.google.maps.Geocoder();
+    geocoderService.current = new window.google.maps.Geocoder.Geocoder();
     placesService.current = new window.google.maps.places.PlacesService(googleMap.current);
-    directionsService.current = new window.google.maps.DirectionsService();
-    directionsRenderer.current = new window.google.maps.DirectionsRenderer({ map: googleMap.current });
+    directionsService.current = new window.google.maps.DirectionsService.DirectionsService();
+    directionsRenderer.current = new window.google.maps.DirectionsRenderer.DirectionsRenderer({ map: googleMap.current });
 
     getCurrentLocation();
   };
@@ -156,14 +156,14 @@ const RequestRide = () => {
     }
     setLoading(true);
 
-    const request: google.maps.DirectionsRequest = {
+    const request: google.maps.DirectionsService.DirectionsRequest = {
       origin: origin,
       destination: destination,
-      travelMode: google.maps.TravelMode.DRIVING,
+      travelMode: google.maps.DirectionsService.TravelMode.DRIVING,
     };
 
     directionsService.current?.route(request, (result, status) => {
-      if (status === google.maps.DirectionsStatus.OK && result) {
+      if (status === google.maps.DirectionsService.DirectionsStatus.OK && result) {
         directionsRenderer.current?.setDirections(result);
         const route = result.routes[0].legs[0];
         if (route.distance && route.duration) {
