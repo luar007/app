@@ -74,6 +74,9 @@ export default {
           600: '#8B5CF6', // Exemplo de roxo, ajuste conforme necessário
           700: '#7C3AED', // Exemplo de roxo mais escuro para hover
         },
+        // Cores para o gradiente roxo do logo e botão
+        veloxPurpleLight: '#A78BFA', // Roxo claro para gradiente
+        veloxPurpleDark: '#7C3AED',  // Roxo escuro para gradiente
       },
       borderRadius: {
         lg: "0.75rem", // Mais arredondado

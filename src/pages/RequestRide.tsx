@@ -6,19 +6,20 @@ import { showSuccess, showError } from '@/utils/toast';
 import BottomNavBar from '@/components/BottomNavBar';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleMaps } from '@/hooks/useGoogleMaps';
-import { MapPin, Send, Search } from 'lucide-react'; // Adicionado Send e Search
-import Header from '@/components/Header'; // Importar o novo componente Header
-import { useSession } from '@/contexts/SessionContext'; // Para obter o nome do usuário
-import { supabase } from '@/integrations/supabase/client'; // Para buscar o perfil
+import { MapPin, Send, Search } from 'lucide-react';
+import Header from '@/components/Header';
+import RideRequestCard from '@/components/RideRequestCard'; // Importar o novo componente
+import { useSession } from '@/contexts/SessionContext';
+import { supabase } from '@/integrations/supabase/client';
 
-declare var google: any; // Declaração global para resolver erros de tipo
+declare var google: any;
 
 const RequestRide = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [loading, setLoading] = useState(false);
   const [currentLocation, setCurrentLocation] = useState('');
-  const [firstName, setFirstName] = useState('Usuário'); // Estado para o primeiro nome
+  const [firstName, setFirstName] = useState('Usuário');
   const navigate = useNavigate();
   const { isLoaded, loadError } = useGoogleMaps();
   const mapRef = useRef<HTMLDivElement>(null);
@@ -33,7 +34,7 @@ const RequestRide = () => {
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
 
-  const defaultCenter = { lat: -23.55052, lng: -46.633308 }; // Centro de São Paulo
+  const defaultCenter = { lat: -23.55052, lng: -46.633308 };
 
   const { user, loading: sessionLoading } = useSession();
 
@@ -222,52 +223,26 @@ const RequestRide = () => {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20">
-      <Header /> {/* Novo componente de cabeçalho */}
+    <div className="relative min-h-screen flex flex-col items-center bg-veloxGreen-background text-veloxGreen-text">
+      <Header />
 
       {/* Mapa de fundo */}
       <div ref={mapRef} className="absolute inset-0 z-0" style={{ height: '100%', width: '100%' }}></div>
 
-      {/* Conteúdo da página sobreposto ao mapa */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-md p-4 pt-20"> {/* Adicionado pt-20 para compensar o cabeçalho */}
-        <div className="w-full bg-gray-800 p-6 rounded-lg shadow-lg mb-4">
-          <h2 className="text-2xl font-bold mb-2 text-white">Olá, {firstName}! 👋</h2>
-          <p className="text-gray-300 mb-6">Para onde você quer ir?</p>
+      {/* Card flutuante de solicitação de corrida */}
+      <RideRequestCard
+        firstName={firstName}
+        origin={origin}
+        setOrigin={setOrigin}
+        destination={destination}
+        setDestination={setDestination}
+        loading={loading}
+        handleConfirmDestination={handleConfirmDestination}
+        originInputRef={originInputRef}
+        destinationInputRef={destinationInputRef}
+      />
 
-          <form onSubmit={handleConfirmDestination} className="space-y-4">
-            <div className="flex items-center bg-gray-700 rounded-lg p-3">
-              <Send className="h-5 w-5 text-veloxGreen mr-3" />
-              <Input
-                id="origin-input"
-                ref={originInputRef}
-                type="text"
-                placeholder="De onde você vai? Sua localização"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                required
-                className="flex-grow bg-transparent border-none text-white placeholder-gray-400 focus:ring-0 focus:border-0 p-0"
-              />
-            </div>
-            <div className="flex items-center bg-gray-700 rounded-lg p-3">
-              <MapPin className="h-5 w-5 text-veloxGreen mr-3" />
-              <Input
-                id="destination-input"
-                ref={destinationInputRef}
-                type="text"
-                placeholder="Para onde você vai? Para onde?"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                required
-                className="flex-grow bg-transparent border-none text-white placeholder-gray-400 focus:ring-0 focus:border-0 p-0"
-              />
-            </div>
-            <Button type="submit" className="btn-velox w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center text-lg py-3 rounded-lg" disabled={loading}>
-              <Search className="h-5 w-5 mr-2" /> {loading ? 'Buscando...' : 'Buscar Corrida'}
-            </Button>
-          </form>
-        </div>
-      </div>
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 w-full mt-auto"> {/* MadeWithDyad e BottomNavBar no final */}
         <MadeWithDyad />
       </div>
       <BottomNavBar />
