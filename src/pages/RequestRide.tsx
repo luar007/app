@@ -22,9 +22,13 @@ const RequestRide = () => {
   const geocoderService = useRef<google.maps.Geocoder | null>(null);
   const placesService = useRef<google.maps.places.PlacesService | null>(null);
 
+  const originInputRef = useRef<HTMLInputElement>(null);
+  const destinationInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (isLoaded && mapRef.current) {
       initializeMap();
+      initializeAutocompletes();
     }
   }, [isLoaded]);
 
@@ -45,6 +49,39 @@ const RequestRide = () => {
     placesService.current = new window.google.maps.places.PlacesService(googleMap.current);
 
     getCurrentLocation();
+  };
+
+  const initializeAutocompletes = () => {
+    if (!window.google || !window.google.maps.places) {
+      showError('Google Places API not loaded.');
+      return;
+    }
+
+    if (originInputRef.current) {
+      const originAutocomplete = new window.google.maps.places.Autocomplete(originInputRef.current, {
+        types: ['address'],
+        componentRestrictions: { country: 'br' }, // Restrict to Brazil
+      });
+      originAutocomplete.addListener('place_changed', () => {
+        const place = originAutocomplete.getPlace();
+        if (place.formatted_address) {
+          setOrigin(place.formatted_address);
+        }
+      });
+    }
+
+    if (destinationInputRef.current) {
+      const destinationAutocomplete = new window.google.maps.places.Autocomplete(destinationInputRef.current, {
+        types: ['address'],
+        componentRestrictions: { country: 'br' }, // Restrict to Brazil
+      });
+      destinationAutocomplete.addListener('place_changed', () => {
+        const place = destinationAutocomplete.getPlace();
+        if (place.formatted_address) {
+          setDestination(place.formatted_address);
+        }
+      });
+    }
   };
 
   const getCurrentLocation = () => {
@@ -144,6 +181,8 @@ const RequestRide = () => {
           </div>
           <form onSubmit={handleConfirmDestination} className="space-y-4">
             <Input
+              id="origin-input"
+              ref={originInputRef}
               type="text"
               placeholder="Ponto de partida"
               value={origin}
@@ -152,6 +191,8 @@ const RequestRide = () => {
               className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
             />
             <Input
+              id="destination-input"
+              ref={destinationInputRef}
               type="text"
               placeholder="Para onde vamos?"
               value={destination}
