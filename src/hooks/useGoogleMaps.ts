@@ -15,8 +15,16 @@ export const useGoogleMaps = () => {
   const [loadError, setLoadError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (window.google) {
+    // Check if the script is already loaded or if google object exists
+    if (window.google && window.google.maps) {
       setIsLoaded(true);
+      return;
+    }
+
+    // Check if a script with the Google Maps API URL already exists
+    const existingScript = document.querySelector(`script[src^="https://maps.googleapis.com/maps/api/js"]`);
+    if (existingScript) {
+      // If it exists, assume it's loading or loaded, and wait for initMap callback
       return;
     }
 
@@ -30,13 +38,16 @@ export const useGoogleMaps = () => {
     };
 
     script.onerror = () => {
-      setLoadError(new Error('Failed to load Google Maps script.'));
+      setLoadError(new Error('Failed to load Google Maps script. Please check your API key and network connection.'));
     };
 
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      // Clean up the script and callback if component unmounts before loading
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
       delete window.initMap;
     };
   }, []);

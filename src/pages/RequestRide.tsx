@@ -27,6 +27,8 @@ const RequestRide = () => {
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
 
+  const defaultCenter = { lat: -23.55052, lng: -46.633308 }; // Centro de São Paulo
+
   useEffect(() => {
     if (isLoaded && mapRef.current) {
       initializeMap();
@@ -35,13 +37,13 @@ const RequestRide = () => {
   }, [isLoaded]);
 
   const initializeMap = () => {
-    if (!window.google) {
-      showError('Google Maps API not loaded.');
+    if (!window.google || !window.google.maps) {
+      showError('Google Maps API não carregada.');
       return;
     }
 
     googleMap.current = new window.google.maps.Map(mapRef.current as HTMLElement, {
-      center: { lat: -23.55052, lng: -46.633308 }, // Default to São Paulo, Brazil
+      center: defaultCenter,
       zoom: 12,
       disableDefaultUI: true,
     });
@@ -57,7 +59,7 @@ const RequestRide = () => {
 
   const initializeAutocompletes = () => {
     if (!window.google || !window.google.maps.places) {
-      showError('Google Places API not loaded.');
+      showError('Google Places API não carregada.');
       return;
     }
 
@@ -101,12 +103,17 @@ const RequestRide = () => {
           reverseGeocode(pos);
         },
         (error) => {
-          console.error('Error getting current location:', error);
+          console.error('Erro ao obter localização atual:', error);
           showError('Não foi possível obter sua localização atual. Por favor, insira manualmente.');
-        }
+          // Fallback to default center if geolocation fails
+          googleMap.current?.setCenter(defaultCenter);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 } // Options for geolocation
       );
     } else {
       showError('Seu navegador não suporta geolocalização.');
+      // Fallback to default center if geolocation not supported
+      googleMap.current?.setCenter(defaultCenter);
     }
   };
 
@@ -135,7 +142,7 @@ const RequestRide = () => {
         setCurrentLocation(results[0].formatted_address);
         setOrigin(results[0].formatted_address);
       } else {
-        console.error('Geocoder failed due to: ' + status);
+        console.error('Geocoder falhou devido a: ' + status);
         showError('Não foi possível determinar o endereço da sua localização.');
       }
     });
@@ -172,7 +179,7 @@ const RequestRide = () => {
           showError('Não foi possível calcular a distância e duração da rota.');
         }
       } else {
-        console.error('Directions request failed due to ' + status);
+        console.error('Solicitação de rotas falhou devido a ' + status);
         showError('Não foi possível encontrar uma rota para o destino selecionado.');
       }
       setLoading(false);
