@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+// Hardcoding a chave da API para teste, conforme solicitado.
+// Lembre-se de reverter para import.meta.env.VITE_MAPS_API_KEY após o teste.
+const GOOGLE_MAPS_API_KEY = 'AIzaSyDsO2bQrWULscRlDL10Op6Jkm3SMfvgVCk'; 
 const GOOGLE_MAPS_API_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&callback=initMap`;
 
 declare global {
