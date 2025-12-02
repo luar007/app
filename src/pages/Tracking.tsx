@@ -2,6 +2,7 @@ import React from 'react';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import BottomNavBar from '@/components/BottomNavBar';
 import { Car, User, Phone, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button'; // Import Button component
 
 const Tracking = () => {
   // Dados simulados do motorista e da viagem
