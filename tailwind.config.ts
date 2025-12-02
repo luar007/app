@@ -69,6 +69,11 @@ export default {
           background: "hsl(160, 20%, 15%)", // Verde escuro para o fundo
           text: "hsl(0, 0%, 95%)", // Texto claro
         },
+        // Nova cor roxa para o botão "Buscar Corrida"
+        purple: {
+          600: '#8B5CF6', // Exemplo de roxo, ajuste conforme necessário
+          700: '#7C3AED', // Exemplo de roxo mais escuro para hover
+        },
       },
       borderRadius: {
         lg: "0.75rem", // Mais arredondado

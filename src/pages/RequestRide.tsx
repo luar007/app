@@ -6,7 +6,10 @@ import { showSuccess, showError } from '@/utils/toast';
 import BottomNavBar from '@/components/BottomNavBar';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleMaps } from '@/hooks/useGoogleMaps';
-import { MapPin } from 'lucide-react';
+import { MapPin, Send, Search } from 'lucide-react'; // Adicionado Send e Search
+import Header from '@/components/Header'; // Importar o novo componente Header
+import { useSession } from '@/contexts/SessionContext'; // Para obter o nome do usuário
+import { supabase } from '@/integrations/supabase/client'; // Para buscar o perfil
 
 declare var google: any; // Declaração global para resolver erros de tipo
 
@@ -15,21 +18,45 @@ const RequestRide = () => {
   const [destination, setDestination] = useState('');
   const [loading, setLoading] = useState(false);
   const [currentLocation, setCurrentLocation] = useState('');
+  const [firstName, setFirstName] = useState('Usuário'); // Estado para o primeiro nome
   const navigate = useNavigate();
   const { isLoaded, loadError } = useGoogleMaps();
   const mapRef = useRef<HTMLDivElement>(null);
-  const googleMap = useRef<any | null>(null); // Usando 'any' para simplificar
-  const currentMarker = useRef<any | null>(null); // Usando 'any' para simplificar
-  const autocompleteService = useRef<any | null>(null); // Usando 'any' para simplificar
-  const geocoderService = useRef<any | null>(null); // Usando 'any' para simplificar
-  const placesService = useRef<any | null>(null); // Usando 'any' para simplificar
-  const directionsService = useRef<any | null>(null); // Usando 'any' para simplificar
-  const directionsRenderer = useRef<any | null>(null); // Usando 'any' para simplificar
+  const googleMap = useRef<any | null>(null);
+  const currentMarker = useRef<any | null>(null);
+  const autocompleteService = useRef<any | null>(null);
+  const geocoderService = useRef<any | null>(null);
+  const placesService = useRef<any | null>(null);
+  const directionsService = useRef<any | null>(null);
+  const directionsRenderer = useRef<any | null>(null);
 
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
 
   const defaultCenter = { lat: -23.55052, lng: -46.633308 }; // Centro de São Paulo
+
+  const { user, loading: sessionLoading } = useSession();
+
+  useEffect(() => {
+    if (!sessionLoading && user) {
+      fetchUserProfile();
+    }
+  }, [user, sessionLoading]);
+
+  const fetchUserProfile = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('first_name')
+      .eq('id', user.id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Erro ao buscar perfil:', error.message);
+    } else if (data) {
+      setFirstName(data.first_name || 'Usuário');
+    }
+  };
 
   useEffect(() => {
     if (isLoaded && mapRef.current) {
@@ -68,7 +95,7 @@ const RequestRide = () => {
     if (originInputRef.current) {
       const originAutocomplete = new google.maps.places.Autocomplete(originInputRef.current, {
         types: ['address'],
-        componentRestrictions: { country: 'br' }, // Restrict to Brazil
+        componentRestrictions: { country: 'br' },
       });
       originAutocomplete.addListener('place_changed', () => {
         const place = originAutocomplete.getPlace();
@@ -81,7 +108,7 @@ const RequestRide = () => {
     if (destinationInputRef.current) {
       const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputRef.current, {
         types: ['address'],
-        componentRestrictions: { country: 'br' }, // Restrict to Brazil
+        componentRestrictions: { country: 'br' },
       });
       destinationAutocomplete.addListener('place_changed', () => {
         const place = destinationAutocomplete.getPlace();
@@ -107,19 +134,17 @@ const RequestRide = () => {
         (error) => {
           console.error('Erro ao obter localização atual:', error);
           showError('Não foi possível obter sua localização atual. Por favor, insira manualmente.');
-          // Fallback to default center if geolocation fails
           googleMap.current?.setCenter(defaultCenter);
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 } // Options for geolocation
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
     } else {
       showError('Seu navegador não suporta geolocalização.');
-      // Fallback to default center if geolocation not supported
       googleMap.current?.setCenter(defaultCenter);
     }
   };
 
-  const addCurrentLocationMarker = (position: any) => { // Usando 'any' para simplificar
+  const addCurrentLocationMarker = (position: any) => {
     if (currentMarker.current) {
       currentMarker.current.setMap(null);
     }
@@ -130,7 +155,7 @@ const RequestRide = () => {
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
         scale: 7,
-        fillColor: '#4CAF50', // Velox Green
+        fillColor: '#4CAF50',
         fillOpacity: 1,
         strokeWeight: 2,
         strokeColor: '#FFFFFF',
@@ -138,7 +163,7 @@ const RequestRide = () => {
     });
   };
 
-  const reverseGeocode = (position: any) => { // Usando 'any' para simplificar
+  const reverseGeocode = (position: any) => {
     geocoderService.current?.geocode({ location: position }, (results: any, status: any) => {
       if (status === 'OK' && results && results[0]) {
         setCurrentLocation(results[0].formatted_address);
@@ -158,7 +183,7 @@ const RequestRide = () => {
     }
     setLoading(true);
 
-    const request: any = { // Usando 'any' para simplificar
+    const request: any = {
       origin: origin,
       destination: destination,
       travelMode: google.maps.TravelMode.DRIVING,
@@ -173,8 +198,8 @@ const RequestRide = () => {
             state: {
               origin,
               destination,
-              distance: route.distance.value, // in meters
-              duration: route.duration.value, // in seconds
+              distance: route.distance.value,
+              duration: route.duration.value,
             },
           });
         } else {
@@ -198,47 +223,46 @@ const RequestRide = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20">
+      <Header /> {/* Novo componente de cabeçalho */}
+
       {/* Mapa de fundo */}
       <div ref={mapRef} className="absolute inset-0 z-0" style={{ height: '100%', width: '100%' }}></div>
 
       {/* Conteúdo da página sobreposto ao mapa */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-md p-4">
-        <h1 className="text-4xl font-bold mb-8 text-center text-white">Solicitar Corrida</h1>
-
+      <div className="relative z-10 flex flex-col items-center w-full max-w-md p-4 pt-20"> {/* Adicionado pt-20 para compensar o cabeçalho */}
         <div className="w-full bg-gray-800 p-6 rounded-lg shadow-lg mb-4">
-          <div className="mb-4">
-            <label htmlFor="current-location" className="block text-sm font-medium text-gray-300 mb-1">Localização Atual</label>
-            <Input
-              id="current-location"
-              type="text"
-              value={currentLocation}
-              readOnly
-              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen cursor-not-allowed"
-            />
-          </div>
+          <h2 className="text-2xl font-bold mb-2 text-white">Olá, {firstName}! 👋</h2>
+          <p className="text-gray-300 mb-6">Para onde você quer ir?</p>
+
           <form onSubmit={handleConfirmDestination} className="space-y-4">
-            <Input
-              id="origin-input"
-              ref={originInputRef}
-              type="text"
-              placeholder="Ponto de partida"
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              required
-              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
-            />
-            <Input
-              id="destination-input"
-              ref={destinationInputRef}
-              type="text"
-              placeholder="Para onde vamos?"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              required
-              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen"
-            />
-            <Button type="submit" className="btn-velox w-full" disabled={loading}>
-              {loading ? 'Confirmando...' : 'Confirmar Destino'}
+            <div className="flex items-center bg-gray-700 rounded-lg p-3">
+              <Send className="h-5 w-5 text-veloxGreen mr-3" />
+              <Input
+                id="origin-input"
+                ref={originInputRef}
+                type="text"
+                placeholder="De onde você vai? Sua localização"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                required
+                className="flex-grow bg-transparent border-none text-white placeholder-gray-400 focus:ring-0 focus:border-0 p-0"
+              />
+            </div>
+            <div className="flex items-center bg-gray-700 rounded-lg p-3">
+              <MapPin className="h-5 w-5 text-veloxGreen mr-3" />
+              <Input
+                id="destination-input"
+                ref={destinationInputRef}
+                type="text"
+                placeholder="Para onde você vai? Para onde?"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                required
+                className="flex-grow bg-transparent border-none text-white placeholder-gray-400 focus:ring-0 focus:border-0 p-0"
+              />
+            </div>
+            <Button type="submit" className="btn-velox w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center text-lg py-3 rounded-lg" disabled={loading}>
+              <Search className="h-5 w-5 mr-2" /> {loading ? 'Buscando...' : 'Buscar Corrida'}
             </Button>
           </form>
         </div>
