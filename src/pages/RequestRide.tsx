@@ -1,16 +1,104 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { showSuccess, showError } from '@/utils/toast';
 import BottomNavBar from '@/components/BottomNavBar';
 import { useNavigate } from 'react-router-dom';
+import { useGoogleMaps } from '@/hooks/useGoogleMaps';
+import { MapPin } from 'lucide-react';
 
 const RequestRide = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [loading, setLoading] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState('');
   const navigate = useNavigate();
+  const { isLoaded, loadError } = useGoogleMaps();
+  const mapRef = useRef<HTMLDivElement>(null);
+  const googleMap = useRef<google.maps.Map | null>(null);
+  const currentMarker = useRef<google.maps.Marker | null>(null);
+  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
+  const geocoderService = useRef<google.maps.Geocoder | null>(null);
+  const placesService = useRef<google.maps.places.PlacesService | null>(null);
+
+  useEffect(() => {
+    if (isLoaded && mapRef.current) {
+      initializeMap();
+    }
+  }, [isLoaded]);
+
+  const initializeMap = () => {
+    if (!window.google) {
+      showError('Google Maps API not loaded.');
+      return;
+    }
+
+    googleMap.current = new window.google.maps.Map(mapRef.current as HTMLElement, {
+      center: { lat: -23.55052, lng: -46.633308 }, // Default to São Paulo, Brazil
+      zoom: 12,
+      disableDefaultUI: true,
+    });
+
+    autocompleteService.current = new window.google.maps.places.AutocompleteService();
+    geocoderService.current = new window.google.maps.Geocoder();
+    placesService.current = new window.google.maps.places.PlacesService(googleMap.current);
+
+    getCurrentLocation();
+  };
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          googleMap.current?.setCenter(pos);
+          addCurrentLocationMarker(pos);
+          reverseGeocode(pos);
+        },
+        (error) => {
+          console.error('Error getting current location:', error);
+          showError('Não foi possível obter sua localização atual. Por favor, insira manualmente.');
+        }
+      );
+    } else {
+      showError('Seu navegador não suporta geolocalização.');
+    }
+  };
+
+  const addCurrentLocationMarker = (position: google.maps.LatLngLiteral) => {
+    if (currentMarker.current) {
+      currentMarker.current.setMap(null);
+    }
+    currentMarker.current = new window.google.maps.Marker({
+      position: position,
+      map: googleMap.current,
+      title: 'Sua Localização Atual',
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 7,
+        fillColor: '#4CAF50', // Velox Green
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: '#FFFFFF',
+      },
+    });
+  };
+
+  const reverseGeocode = (position: google.maps.LatLngLiteral) => {
+    geocoderService.current?.geocode({ location: position }, (results, status) => {
+      if (status === 'OK' && results && results[0]) {
+        setCurrentLocation(results[0].formatted_address);
+        setOrigin(results[0].formatted_address);
+      } else {
+        console.error('Geocoder failed due to: ' + status);
+        showError('Não foi possível determinar o endereço da sua localização.');
+      }
+    });
+  };
 
   const handleConfirmDestination = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,30 +114,34 @@ const RequestRide = () => {
     }, 1000);
   };
 
-  // URL do Google Maps Embed API. Usando a chave de API do .env
-  const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_MAPS_API_KEY}&q=Brazil`;
+  if (loadError) {
+    return <div className="min-h-screen flex items-center justify-center bg-veloxGreen-background text-veloxGreen-text">Erro ao carregar o mapa: {loadError.message}</div>;
+  }
+
+  if (!isLoaded) {
+    return <div className="min-h-screen flex items-center justify-center bg-veloxGreen-background text-veloxGreen-text">Carregando mapa...</div>;
+  }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20"> {/* Adicionado padding-bottom para a nav bar */}
+    <div className="relative min-h-screen flex flex-col items-center justify-between bg-veloxGreen-background text-veloxGreen-text pb-20">
       {/* Mapa de fundo */}
-      <div className="absolute inset-0 z-0">
-        <iframe
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          loading="lazy"
-          allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
-          src={mapEmbedUrl}
-          title="Mapa Interativo"
-        ></iframe>
-      </div>
+      <div ref={mapRef} className="absolute inset-0 z-0" style={{ height: '100%', width: '100%' }}></div>
 
       {/* Conteúdo da página sobreposto ao mapa */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-md p-4">
         <h1 className="text-4xl font-bold mb-8 text-center text-white">Solicitar Corrida</h1>
 
         <div className="w-full bg-gray-800 p-6 rounded-lg shadow-lg mb-4">
+          <div className="mb-4">
+            <label htmlFor="current-location" className="block text-sm font-medium text-gray-300 mb-1">Localização Atual</label>
+            <Input
+              id="current-location"
+              type="text"
+              value={currentLocation}
+              readOnly
+              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 rounded-md focus:ring-veloxGreen focus:border-veloxGreen cursor-not-allowed"
+            />
+          </div>
           <form onSubmit={handleConfirmDestination} className="space-y-4">
             <Input
               type="text"
